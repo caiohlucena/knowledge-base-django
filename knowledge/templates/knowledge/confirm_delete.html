@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow p-4">
+    <h3>Excluir processo</h3>
+    <p>Tem certeza que deseja excluir o processo <strong>{{ process.title }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <a href="{% url 'knowledge:process_detail' process.slug %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Excluir</button>
+    </form>
+</div>
+{% endblock %}

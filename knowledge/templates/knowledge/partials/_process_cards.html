@@ -1,0 +1,24 @@
+{% for p in processes %}
+<div class="col-md-6 col-xl-4">
+    <div class="card card-hover h-100">
+        <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start">
+                <span class="badge text-bg-light border badge-cat">{{ p.category.name }}</span>
+                {% if user.is_authenticated %}
+                <button id="fav-{{ p.id }}" onclick="toggleFavorite({{ p.id }})"
+                    class="btn btn-sm {% if p.id in favorites_ids %}btn-warning{% else %}btn-outline-warning{% endif %}"><i
+                        class="bi bi-star-fill"></i></button>
+                {% endif %}
+            </div>
+            <h5 class="mt-2"><a class="text-decoration-none" href="{% url 'knowledge:process_detail' p.slug %}">{{ p.title }}</a></h5>
+            <p class="text-muted small flex-grow-1">{{ p.description|truncatewords:24 }}</p>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <small class="text-muted">Atualizado: {{ p.updated_at|date:'d/m/Y H:i' }}</small>
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'knowledge:process_detail' p.slug %}">Abrir</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="col-12 text-center text-muted py-5">Nenhum processo encontrado.</div>
+{% endfor %}

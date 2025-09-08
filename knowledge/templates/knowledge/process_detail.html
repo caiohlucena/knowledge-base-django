@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block content %}
+<ol class="breadcrumb bg-transparent px-0">
+    <li class="breadcrumb-item"><a href="/">Início</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'knowledge:by_category' process.category.slug %}">{{ process.category.name }}</a></li>
+    <li class="breadcrumb-item active">{{ process.title }}</li>
+</ol>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h3 class="mb-0">{{ process.title }}</h3>
+                    <div>
+                        {% if user.is_authenticated %}
+                        <button id="fav-{{ process.id }}" onclick="toggleFavorite({{ process.id }})"
+                            class="btn btn-sm {% if is_fav %}btn-warning{% else %}btn-outline-warning{% endif %}"><i
+                                class="bi bi-star-fill"></i></button>
+                        {% endif %}
+                    </div>
+                </div>
+                <p class="text-muted mb-1">Atualizado em {{ process.updated_at|date:'d/m/Y H:i' }}</p>
+                <hr>
+                <p>{{ process.description }}</p>
+                <h5 class="mt-4">Passo a passo</h5>
+<div id="steps">
+    {% for step in process.steps.all %}
+        <div class="form-check mb-2">
+            <input class="form-check-input step-checkbox" type="checkbox" id="step-{{ step.id }}" {% if not forloop.first %}disabled{% endif %}>
+            <label class="form-check-label" for="step-{{ step.id }}">
+                <strong>Passo {{ forloop.counter }}:</strong> {{ step.description }}
+            </label>
+        </div>
+    {% empty %}
+        <p class="text-muted">Nenhum passo cadastrado.</p>
+    {% endfor %}
+</div>
+
+            </div>
+        </div>
+
+        {% if process.attachments.all %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="mb-3">Anexos</h6>
+                <ul class="list-group list-group-flush">
+                    {% for a in process.attachments.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ a.label|default:a.file.name }}</span>
+                        <a class="btn btn-sm btn-outline-secondary" href="{{ a.file.url }}" target="_blank"><i
+                                class="bi bi-box-arrow-down"></i></a>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-muted">Nenhum anexo.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if process.links.all %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="mb-3">Links úteis</h6>
+                <ul class="list-group list-group-flush">
+                    {% for l in process.links.all %}
+                    <li class="list-group-item"><a href="{{ l.url }}" target="_blank">{{ l.label }}</a></li>
+                    {% empty %}
+                    <li class="list-group-item text-muted">Nenhum link.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="mb-3">Ações</h6>
+                <a class="btn btn-primary w-100" href="/admin/knowledge/process/add/">Novo processo (admin)</a>
+                <a class="btn btn-outline-secondary w-100 mt-2"
+                    href="/admin/knowledge/process/{{ process.id }}/change/">Editar (admin)</a>
+                {% if user.is_staff %}
+                <a class="btn btn-danger w-100 mt-2" href="{% url 'knowledge:delete_process' process.pk %}">Excluir</a>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="mb-3">Mais desta categoria</h6>
+                <ul class="list-group list-group-flush">
+                    {% for p in process.category.processes.all|slice:':5' %}
+                    {% if p.id != process.id %}
+                    <li class="list-group-item"><a href="{% url 'knowledge:process_detail' p.slug %}">{{ p.title }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const checkboxes = document.querySelectorAll(".step-checkbox");
+    checkboxes.forEach((cb, idx) => {
+        cb.addEventListener("change", () => {
+            if (cb.checked && checkboxes[idx + 1]) {
+                checkboxes[idx + 1].disabled = false;
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

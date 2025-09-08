@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4>Últimas atualizações</h4>
+<div class="row g-3 mt-1">
+    {% include 'knowledge/partials/_process_cards.html' with processes=processes %}
+</div>
+{% endblock %}
