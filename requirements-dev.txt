@@ -1,0 +1,8 @@
+-r requirements.txt
+ipython
+ipdb
+bpython
+colorama
+cryptography
+dnspython
+filelock
