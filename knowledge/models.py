@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
 
 class Category(models.Model):
     name = models.CharField(max_length=80, unique=True)
@@ -20,7 +21,7 @@ class Process(models.Model):
     title = models.CharField('Título', max_length=160)
     slug = models.SlugField(unique=True)
     description = models.TextField('Descrição')
-    steps_md = models.TextField('Passo a passo (Markdown)', blank=True, null=True)
+    steps_md = RichTextField('Passo a passo (Rich Text)', blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=True)

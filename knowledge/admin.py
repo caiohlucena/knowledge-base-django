@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Category, Process, Attachment, UsefulLink, Favorite, Step
+from ckeditor.widgets import CKEditorWidget
+from django import forms
 
 
 class AttachmentInline(admin.TabularInline):

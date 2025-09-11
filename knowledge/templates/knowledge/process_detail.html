@@ -15,27 +15,37 @@
                     <div>
                         {% if user.is_authenticated %}
                         <button id="fav-{{ process.id }}" onclick="toggleFavorite({{ process.id }})"
-                            class="btn btn-sm {% if is_fav %}btn-warning{% else %}btn-outline-warning{% endif %}"><i
-                                class="bi bi-star-fill"></i></button>
+                            class="btn btn-sm {% if is_fav %}btn-warning{% else %}btn-outline-warning{% endif %}">
+                            <i class="bi bi-star-fill"></i>
+                        </button>
                         {% endif %}
                     </div>
                 </div>
                 <p class="text-muted mb-1">Atualizado em {{ process.updated_at|date:'d/m/Y H:i' }}</p>
                 <hr>
-                <p>{{ process.description }}</p>
+                <div class="mb-3">
+                    {{ process.description|linebreaks }}
+                </div>
+                <h5 class="mt-4">Descrição</h5>
+                <div class ="mb-4">
+                    {{ process.steps_md|safe }}
+                </div>
+
                 <h5 class="mt-4">Passo a passo</h5>
-<div id="steps">
-    {% for step in process.steps.all %}
-        <div class="form-check mb-2">
-            <input class="form-check-input step-checkbox" type="checkbox" id="step-{{ step.id }}" {% if not forloop.first %}disabled{% endif %}>
-            <label class="form-check-label" for="step-{{ step.id }}">
-                <strong>Passo {{ forloop.counter }}:</strong> {{ step.description }}
-            </label>
-        </div>
-    {% empty %}
-        <p class="text-muted">Nenhum passo cadastrado.</p>
-    {% endfor %}
-</div>
+                <div id="steps">
+                    {% for step in process.steps.all %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input step-checkbox" type="checkbox"
+                                   id="step-{{ step.id }}"
+                                   {% if not forloop.first %}disabled{% endif %}>
+                            <label class="form-check-label" for="step-{{ step.id }}">
+                                <strong>Passo {{ forloop.counter }}:</strong> {{ step.text }}
+                            </label>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">Nenhum passo cadastrado.</p>
+                    {% endfor %}
+                </div>
 
             </div>
         </div>
@@ -74,6 +84,7 @@
         </div>
         {% endif %}
     </div>
+
     <div class="col-lg-4">
         <div class="card">
             <div class="card-body">
@@ -84,7 +95,6 @@
                 {% if user.is_staff %}
                 <a class="btn btn-danger w-100 mt-2" href="{% url 'knowledge:delete_process' process.pk %}">Excluir</a>
                 {% endif %}
-
             </div>
         </div>
 
@@ -94,8 +104,7 @@
                 <ul class="list-group list-group-flush">
                     {% for p in process.category.processes.all|slice:':5' %}
                     {% if p.id != process.id %}
-                    <li class="list-group-item"><a href="{% url 'knowledge:process_detail' p.slug %}">{{ p.title }}</a>
-                    </li>
+                    <li class="list-group-item"><a href="{% url 'knowledge:process_detail' p.slug %}">{{ p.title }}</a></li>
                     {% endif %}
                     {% endfor %}
                 </ul>
