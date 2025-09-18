@@ -87,22 +87,32 @@
       <div class="card h-100 border-0 shadow-sm hover-shadow">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
-            <!-- Ícone baseado no nome -->
+            
+            <!-- Ícone baseado no nome da categoria -->
             {% if "Comissão" in c.name %}
               <i class="bi bi-cash-stack text-primary fs-3 me-3"></i>
             {% elif "Reembolso" in c.name %}
               <i class="bi bi-receipt text-success fs-3 me-3"></i>
             {% elif "Financeiro" in c.name %}
               <i class="bi bi-bank text-warning fs-3 me-3"></i>
+            {% elif "Contrato" in c.name %}
+              <i class="bi bi-file-earmark-text text-danger fs-3 me-3"></i>
+            {% elif "Pagamento" in c.name %}
+              <i class="bi bi-credit-card text-info fs-3 me-3"></i>
             {% else %}
               <i class="bi bi-folder text-secondary fs-3 me-3"></i>
             {% endif %}
 
+            <!-- Texto da categoria -->
             <div>
               <h6 class="mb-1 fw-semibold text-dark">{{ c.name }}</h6>
-              <small class="text-muted">{{ c.description|default:"Sem descrição"|truncatewords:8 }}</small>
+              <small class="text-muted">
+                {{ c.description|default:"Sem descrição"|truncatewords:8 }}
+              </small>
             </div>
           </div>
+
+          <!-- Badge com número de processos -->
           <span class="badge bg-primary">{{ c.processes.count }}</span>
         </div>
       </div>
@@ -110,6 +120,7 @@
   </div>
   {% endfor %}
 </div>
+
 
 
 <!-- PROCESSOS RECENTES -->
