@@ -65,6 +65,22 @@
         .card:hover .icon-container {
             background-color: rgba(13, 110, 253, 0.15) !important;
         }
+
+        .category-description {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            /* número de linhas */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            max-height: 3em;
+            /* evita espaço extra */
+            transition: all 0.3s ease;
+        }
+
+        .category-description.expanded {
+            -webkit-line-clamp: unset;
+            max-height: none;
+        }
     </style>
 </head>
 
